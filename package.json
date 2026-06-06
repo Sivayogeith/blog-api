@@ -1,0 +1,17 @@
+{
+  "name": "blog-api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "bun ./bin/www.js",
+    "dev": "bun --hot ./bin/www.js"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.5",
+    "debug": "~2.6.9",
+    "dotenv": "^17.4.2",
+    "express": "~4.17.1",
+    "morgan": "~1.10.0",
+    "pg-promise": "^12.6.2"
+  }
+}
