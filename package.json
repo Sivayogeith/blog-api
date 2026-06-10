@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "bun ./bin/www.js",
-    "dev": "bun --hot ./bin/www.js"
+    "start": "bun ./bin/www.ts",
+    "dev": "DEBUG=blog-api:* bun --hot ./bin/www.ts"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -17,5 +17,19 @@
     "express-session": "^1.19.0",
     "morgan": "~1.10.0",
     "pg-promise": "^12.6.2"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/bcrypt": "^6.0.0",
+    "@types/connect-pg-simple": "^7.0.3",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/debug": "^4.1.13",
+    "@types/express": "^5.0.6",
+    "@types/express-session": "^1.19.0",
+    "@types/morgan": "^1.9.10",
+    "@types/pg-promise": "^5.4.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
   }
 }
