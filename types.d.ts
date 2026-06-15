@@ -1,3 +1,5 @@
+import type { SessionData } from "express-session";
+
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -7,7 +9,7 @@ declare global {
   }
 }
 
-declare module 'express-session' {
+declare module "express-session" {
   export interface SessionData {
     username: string;
     adminId: number;
@@ -15,7 +17,7 @@ declare module 'express-session' {
 }
 
 export interface Post {
-  id: number; 
+  id: number;
   title: string;
   body: string;
   created_at: string;
@@ -26,4 +28,10 @@ export interface Admin {
   id: number;
   username: string;
   password: string;
+}
+
+export interface Session {
+  sid: string;
+  sess: SessionData;
+  expire: string;4
 }
