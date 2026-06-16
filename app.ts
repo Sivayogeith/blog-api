@@ -10,6 +10,7 @@ import "dotenv/config";
 import { postsRouter } from "./routes/posts";
 import { indexRouter } from "./routes";
 import { authRouter } from "./routes/auth";
+import { adminRouter } from "./routes/admin";
 
 export const app = express();
 export const db = pgPromise()(process.env.POSTGRES_ADDRESS);
@@ -34,3 +35,4 @@ app.use(cookieParser(process.env.SESSION_SECRET));
 app.use("/", indexRouter);
 app.use("/posts", postsRouter);
 app.use("/auth", authRouter);
+app.use("/admin", adminRouter);
