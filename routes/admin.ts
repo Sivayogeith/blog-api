@@ -1,6 +1,7 @@
 import express from "express";
 import { db } from "../app";
 import type { Post } from "../types";
+import pgp, { as, ColumnSet } from "pg-promise";
 
 export const adminRouter = express.Router();
 
@@ -9,18 +10,42 @@ adminRouter.post("/createPost", async (req, res, next) => {
     return res.status(403).send("You aren't logged in :(");
   }
 
-  if (!["title", "body", "slug"].every((key) => Object.hasOwn(req.body, key))) {
-    return res.status(404).send("Please enter all the needed fields!");
+  const { title, body, slug } = req.body;
+
+  if (![title, body, slug].every((value) => typeof value === "string")) {
+    return res.status(400).send("Please enter all the needed fields!");
   }
 
-  db.query<Post[]>(
-    "INSERT INTO posts (${this:name}) VALUES (${this:csv})",
-    req.body,
-  )
+  db.query<Post[]>("INSERT INTO posts (${this:name}) VALUES (${this:csv})", {
+    title,
+    body,
+    slug,
+  })
     .then((posts) => {
       return res.status(200).send("Successfully created post :D");
     })
     .catch(next);
 
   return res.status(200).send("Post created :D");
+});
+
+adminRouter.post("/editPost", async (req, res, next) => {
+  if (!req.session.username) {
+    return res.status(403).send("You aren't logged in :(");
+  }
+
+  if (!Object.hasOwn(req.body, "id")) {
+    return res.status(404).send("Please enter the id of the post!");
+  }
+
+  const cs = new (pgp()).helpers.ColumnSet(["title", "body", "slug"], { table: "posts" });
+  const where = as.format("WHERE id = $1", req.body.id);
+
+  const update = `${pgp().helpers.update(req.body, cs)} ${where}`;
+
+  db.none(update)
+    .then((posts) => {
+      return res.status(200).send("Successfully edited the post :D");
+    })
+    .catch(next);
 });
