@@ -28,10 +28,7 @@ authRouter.post("/login", async (req, res, next) => {
         }
       });
     })
-    .catch((error) => {
-      console.log("ERROR:", error);
-      return res.status(500).send("ERROR:" + error)
-    });
+    .catch(next);
 });
 
 authRouter.get("/me", async (req, res, next) => {
@@ -46,8 +43,5 @@ authRouter.get("/me", async (req, res, next) => {
         adminId: session?.sess.adminId,
       });
     })
-    .catch((error) => {
-      console.log("ERROR:", error);
-      return res.status(500).send("ERROR:" + error)
-    });
+    .catch(next);
 });

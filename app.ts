@@ -1,4 +1,8 @@
-import express from "express";
+import express, {
+  type NextFunction,
+  type Response,
+  type Request,
+} from "express";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import morgan from "morgan";
@@ -23,7 +27,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
-    saveUninitialized: false
+    saveUninitialized: false,
   }),
 );
 
@@ -36,3 +40,8 @@ app.use("/", indexRouter);
 app.use("/posts", postsRouter);
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.log("ERROR: ", err);
+  return res.status(500).send("ERROR:" + err);
+});

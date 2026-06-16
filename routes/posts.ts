@@ -1,4 +1,4 @@
-import express from  "express";
+import express from "express";
 
 import type { Post } from "../types";
 import { db } from "../app";
@@ -10,10 +10,7 @@ postsRouter.get("/", async (req, res, next) => {
     .then((posts) => {
       return res.status(200).json(posts);
     })
-    .catch((error) => {
-      console.log("ERROR:", error);
-      return res.status(500).send("ERROR:" + error)
-    });
+    .catch(next);
 });
 
 postsRouter.get("/:slug", async (req, res, next) => {
@@ -21,8 +18,5 @@ postsRouter.get("/:slug", async (req, res, next) => {
     .then((post) => {
       return res.status(200).json(post[0]);
     })
-    .catch((error) => {
-      console.log("ERROR:", error);
-      return res.status(500).send("ERROR:" + error)
-    });
+    .catch(next);
 });
