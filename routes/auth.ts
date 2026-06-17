@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 
 import type { Admin, Session } from "../types";
 import { db } from "../app";
-import { password } from "bun";
 
 export const authRouter = express.Router();
 

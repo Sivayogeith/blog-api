@@ -1,7 +1,7 @@
 import express from "express";
 import { db } from "../app";
 import type { Post } from "../types";
-import pgp, { as, ColumnSet } from "pg-promise";
+import pgp, { as } from "pg-promise";
 
 export const adminRouter = express.Router();
 
@@ -34,11 +34,13 @@ adminRouter.post("/editPost", async (req, res, next) => {
     return res.status(403).send("You aren't logged in :(");
   }
 
-  if (!Object.hasOwn(req.body, "id")) {
+  if (!req.body.id) {
     return res.status(404).send("Please enter the id of the post!");
   }
 
-  const cs = new (pgp()).helpers.ColumnSet(["title", "body", "slug"], { table: "posts" });
+  const cs = new (pgp().helpers.ColumnSet)(["title", "body", "slug"], {
+    table: "posts",
+  });
   const where = as.format("WHERE id = $1", req.body.id);
 
   const update = `${pgp().helpers.update(req.body, cs)} ${where}`;
@@ -48,4 +50,17 @@ adminRouter.post("/editPost", async (req, res, next) => {
       return res.status(200).send("Successfully edited the post :D");
     })
     .catch(next);
+});
+
+adminRouter.delete("/deletePost", async (req, res, next) => {
+  if (!req.session.username) {
+    return res.status(403).send("You aren't logged in :(");
+  }
+  if (!req.body.id) {
+    return res.status(404).send("Please enter the id of the post!");
+  }
+
+  db.query("DELETE FROM posts WHERE id = $1", req.body.id).then(() => {
+    return res.status(200).send("Successfully deleted the post :D")
+  }).catch(next)
 });
