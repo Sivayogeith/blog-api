@@ -25,8 +25,6 @@ adminRouter.post("/createPost", async (req, res, next) => {
       return res.status(200).send("Successfully created post :D");
     })
     .catch(next);
-
-  return res.status(200).send("Post created :D");
 });
 
 adminRouter.post("/editPost", async (req, res, next) => {
@@ -60,7 +58,9 @@ adminRouter.delete("/deletePost", async (req, res, next) => {
     return res.status(404).send("Please enter the id of the post!");
   }
 
-  db.query("DELETE FROM posts WHERE id = $1", req.body.id).then(() => {
-    return res.status(200).send("Successfully deleted the post :D")
-  }).catch(next)
+  db.query("DELETE FROM posts WHERE id = $1", req.body.id)
+    .then(() => {
+      return res.status(200).send("Successfully deleted the post :D");
+    })
+    .catch(next);
 });

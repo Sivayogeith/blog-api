@@ -16,7 +16,10 @@ postsRouter.get("/", async (req, res, next) => {
 postsRouter.get("/:slug", async (req, res, next) => {
   db.query<Post[]>("SELECT * FROM posts WHERE slug = $1", req.params.slug)
     .then((post) => {
-      return res.status(200).json(post[0]);
+      if (post.length){
+        return res.status(200).json(post[0]);
+      }
+      return res.status(404).send("Post not found :(")
     })
     .catch(next);
 });

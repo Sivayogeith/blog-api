@@ -44,3 +44,15 @@ authRouter.get("/me", async (req, res, next) => {
     })
     .catch(next);
 });
+
+authRouter.get("/logout", async (req, res, next) => {
+  if (!req.sessionID) {
+    return res.status(403).send("You are already logged out!")
+  }
+  req.session.destroy((err) => {
+    if (err) {
+      return next(err)
+    }
+    return res.status(200).send("Successfully logged out :D")
+  })
+})
