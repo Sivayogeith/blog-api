@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import type { Admin, Session } from "../types";
 import { db } from "../app";
 
+import pgp, { as } from "pg-promise";
+
 export const authRouter = express.Router();
 
 authRouter.post("/login", async (req, res, next) => {
@@ -47,12 +49,27 @@ authRouter.get("/me", async (req, res, next) => {
 
 authRouter.get("/logout", async (req, res, next) => {
   if (!req.sessionID) {
-    return res.status(403).send("You are already logged out!")
+    return res.status(403).send("You are already logged out!");
   }
   req.session.destroy((err) => {
     if (err) {
-      return next(err)
+      return next(err);
     }
-    return res.status(200).send("Successfully logged out :D")
-  })
-})
+    return res.status(200).send("Successfully logged out :D");
+  });
+});
+
+authRouter.post("/edit", async (req, res, next) => {
+  if (!req.sessionID) {
+    return res.status(403).send("You aren't logged in!");
+  }
+  const cs = new (pgp().helpers.ColumnSet)(["username"], {
+    table: "admins"
+  });
+  const where = as.format("WHERE id = $1", req.session.adminId);
+  const update = `${pgp().helpers.update(req.body, cs)} ${where}`
+  db.none(update).then(() => {
+    req.session.username = req.body.username
+    return res.status(200).send("Successfully edited your information :D")
+  }).catch(next);
+});

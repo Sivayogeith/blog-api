@@ -1,4 +1,4 @@
-import { app } from "../app";
+import { app, db } from "../app";
 import debugLib from "debug";
 import http from "http";
 import { type AddressInfo } from "net";
@@ -62,3 +62,18 @@ function onListening(): void {
 
   debug(`Listening on ${bind}`);
 }
+
+function gracefulShutdown(signal: any) {
+  console.log(`Received ${signal}. Shutting down Express server...`);
+  
+  server.close(async () => {
+    console.log('Express server closed.');
+
+    await db.$pool.end()
+    
+    process.exit(0);
+  });
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
