@@ -36,7 +36,7 @@ adminRouter.post("/editPost", async (req, res, next) => {
     return res.status(404).send("Please enter the id of the post!");
   }
 
-  const cs = new (pgp().helpers.ColumnSet)(["title", "body", "slug"], {
+  const cs = new (pgp().helpers.ColumnSet)(["title", "body", "slug", "stats"], {
     table: "posts",
   });
   const where = as.format("WHERE id = $1", req.body.id);
@@ -63,4 +63,21 @@ adminRouter.delete("/deletePost", async (req, res, next) => {
       return res.status(200).send("Successfully deleted the post :D");
     })
     .catch(next);
+});
+
+adminRouter.get("/stats", async (req, res, next) => {
+  if (!req.session.username) {
+    return res.status(403).send("You aren't logged in :(");
+  }
+  db.query<{stats: { readingTime: number; words: number }}[]>(
+    "SELECT (stats) FROM posts",
+  ).then((stats) => {
+    let readingTime = 0,
+      words = 0;
+    for (let stat of stats) {
+      readingTime += stat.stats.readingTime;
+      words += stat.stats.words;
+    }
+    res.status(200).json({ readingTime, words });
+  }).catch(next);
 });

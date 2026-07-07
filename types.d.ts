@@ -22,6 +22,10 @@ export interface Post {
   body: string;
   created_at: string;
   slug: string;
+  stats: {
+    readingTime: number;
+    words: number;
+  }
 }
 
 export interface Admin {
@@ -33,5 +37,5 @@ export interface Admin {
 export interface Session {
   sid: string;
   sess: SessionData;
-  expire: string;4
+  expire: string;
 }
