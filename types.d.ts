@@ -39,3 +39,11 @@ export interface Session {
   sess: SessionData;
   expire: string;
 }
+
+export interface Comment {
+  id: number;
+  created_at: string;
+  from: string; // username from admins
+  on: number; // id from posts
+  message: string;
+}

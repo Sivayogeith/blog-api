@@ -12,7 +12,7 @@ adminRouter.post("/createPost", async (req, res, next) => {
 
   const { title, body, slug } = req.body;
 
-  if (![title, body, slug].every((value) => typeof value === "string")) {
+  if (![title, body, slug].every(v => typeof v === "string")) {
     return res.status(400).send("Please enter all the needed fields!");
   }
 
@@ -21,7 +21,7 @@ adminRouter.post("/createPost", async (req, res, next) => {
     body,
     slug,
   })
-    .then((posts) => {
+    .then(_ => {
       return res.status(200).send("Successfully created post :D");
     })
     .catch(next);
