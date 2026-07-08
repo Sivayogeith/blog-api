@@ -12,7 +12,8 @@ declare global {
 declare module "express-session" {
   export interface SessionData {
     username: string;
-    adminId: number;
+    userId: number;
+    isAdmin: boolean;
   }
 }
 
@@ -28,10 +29,11 @@ export interface Post {
   }
 }
 
-export interface Admin {
+export interface User {
   id: number;
   username: string;
   password: string;
+  isAdmin: boolean;
 }
 
 export interface Session {
@@ -43,7 +45,7 @@ export interface Session {
 export interface Comment {
   id: number;
   created_at: string;
-  from: string; // username from admins
+  from: string; // username from users
   on: number; // id from posts
   message: string;
 }

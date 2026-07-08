@@ -2,14 +2,13 @@ import express from "express";
 import { db } from "../app";
 import type { Post } from "../types";
 import pgp, { as } from "pg-promise";
+import { adminOnly } from "../middleware/authMiddleware";
 
 export const adminRouter = express.Router();
 
-adminRouter.post("/createPost", async (req, res, next) => {
-  if (!req.session.username) {
-    return res.status(403).send("You aren't logged in :(");
-  }
+adminRouter.use(adminOnly)
 
+adminRouter.post("/createPost", async (req, res, next) => {
   const { title, body, slug } = req.body;
 
   if (![title, body, slug].every(v => typeof v === "string")) {
@@ -28,10 +27,6 @@ adminRouter.post("/createPost", async (req, res, next) => {
 });
 
 adminRouter.post("/editPost", async (req, res, next) => {
-  if (!req.session.username) {
-    return res.status(403).send("You aren't logged in :(");
-  }
-
   if (!req.body.id) {
     return res.status(404).send("Please enter the id of the post!");
   }
@@ -51,9 +46,6 @@ adminRouter.post("/editPost", async (req, res, next) => {
 });
 
 adminRouter.delete("/deletePost", async (req, res, next) => {
-  if (!req.session.username) {
-    return res.status(403).send("You aren't logged in :(");
-  }
   if (!req.body.id) {
     return res.status(404).send("Please enter the id of the post!");
   }
@@ -66,9 +58,6 @@ adminRouter.delete("/deletePost", async (req, res, next) => {
 });
 
 adminRouter.get("/stats", async (req, res, next) => {
-  if (!req.session.username) {
-    return res.status(403).send("You aren't logged in :(");
-  }
   db.query<{stats: { readingTime: number; words: number }}[]>(
     "SELECT (stats) FROM posts",
   ).then((stats) => {

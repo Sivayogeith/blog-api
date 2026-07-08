@@ -2,13 +2,11 @@ import express from "express";
 import { db } from "../app";
 import pgp, { as } from "pg-promise";
 import type { Comment } from "../types";
+import { adminOnly } from "../middleware/authMiddleware";
 
 export const commentsRouter = express.Router();
 
-commentsRouter.post("/:id/edit", async (req, res, next) => {
-  if (!req.session.username) {
-    return res.status(403).send("You aren't logged in!");
-  }
+commentsRouter.post("/:id/edit", adminOnly, async (req, res, next) => {
   if (!req.params.id) {
     return res.status(404).send("Please enter the id of the comment!");
   }
@@ -30,11 +28,7 @@ commentsRouter.post("/:id/edit", async (req, res, next) => {
     .catch(next);
 });
 
-commentsRouter.delete("/:id/delete", async (req, res, next) => {
-    if (!req.session.username) {
-        return res.status(403).send("You aren't logged in!");
-    }
-
+commentsRouter.delete("/:id/delete", adminOnly, async (req, res, next) => {
     if (!req.params.id) {
         return res.status(404).send("Please enter the id of the comment!")
     }
