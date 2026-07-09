@@ -9,7 +9,7 @@ export const adminOnly: RequestHandler = (req, res, next) => {
 
 export const authenticated: RequestHandler = (req, res, next) => {
   if (!req.session.username) {
-    return res.status(403).send("You aren't logged on :(")
+    return res.status(403).send("You aren't logged in :(")
   }
 
   return next()

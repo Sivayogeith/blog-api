@@ -9,6 +9,26 @@ import { adminOnly, authenticated } from "../middleware/authMiddleware";
 
 export const authRouter = express.Router();
 
+authRouter.post("/register", async (req, res, next) => {
+  const { username, password } = req.body
+  
+  if (username.length < 4 || password.length < 8) {
+    return res.status(400).send("Username must be at least 4 characters long, and password must be at least 8 characters long")
+  }
+  
+  const doesUserExist = await db.query<User[]>("SELECT * FROM users WHERE username = $1", username)
+  if (doesUserExist.length){
+    return res.status(409).send("Username is already in use :(")
+  }
+
+  db.one<User>("INSERT INTO users (${this:name}) VALUES (${this:csv})", {username, password}).then(({username, id, isAdmin}) => {
+    req.session.username = username
+    req.session.userId = id
+    req.session.isAdmin = isAdmin
+    return res.status(200).send("Successfully registered user :D")
+  }).catch(next)
+})
+
 authRouter.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
 
@@ -20,7 +40,7 @@ authRouter.post("/login", async (req, res, next) => {
     .then((users) => {
       const user = users[0];
       if (!user) {
-        return res.status(403).send("You aren't :(");
+        return res.status(403).send("You aren't a real person :(");
       }
       bcrypt.compare(password, user.password, async (err, result) => {
         if (result) {

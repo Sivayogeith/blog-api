@@ -27,6 +27,7 @@ export interface Post {
     readingTime: number;
     words: number;
   }
+  image: string;
 }
 
 export interface User {
