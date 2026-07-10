@@ -1,10 +1,11 @@
 import express from "express";
 import { db } from "../app.js";
-import pgp, { as } from "pg-promise";
+import pgp from "pg-promise";
 import type { Comment } from "../types.js";
 import { adminOnly } from "../middleware/authMiddleware.js";
 
 export const commentsRouter = express.Router();
+const { as } = pgp;
 
 commentsRouter.post("/:id/edit", adminOnly, async (req, res, next) => {
   if (!req.params.id) {

@@ -1,17 +1,18 @@
 import express from "express";
 import { db } from "../app.js";
 import type { Post } from "../types.js";
-import pgp, { as } from "pg-promise";
+import pgp from "pg-promise";
 import { adminOnly } from "../middleware/authMiddleware.js";
 
 export const adminRouter = express.Router();
+const { as } = pgp;
 
-adminRouter.use(adminOnly)
+adminRouter.use(adminOnly);
 
 adminRouter.post("/createPost", async (req, res, next) => {
   const { title, body, slug } = req.body;
 
-  if (![title, body, slug].every(v => typeof v === "string")) {
+  if (![title, body, slug].every((v) => typeof v === "string")) {
     return res.status(400).send("Please enter all the needed fields!");
   }
 
@@ -20,7 +21,7 @@ adminRouter.post("/createPost", async (req, res, next) => {
     body,
     slug,
   })
-    .then(_ => {
+    .then((_) => {
       return res.status(200).send("Successfully created post :D");
     })
     .catch(next);
@@ -58,15 +59,17 @@ adminRouter.delete("/deletePost", async (req, res, next) => {
 });
 
 adminRouter.get("/stats", async (req, res, next) => {
-  db.query<{stats: { readingTime: number; words: number }}[]>(
+  db.query<{ stats: { readingTime: number; words: number } }[]>(
     "SELECT (stats) FROM posts",
-  ).then((stats) => {
-    let readingTime = 0,
-      words = 0;
-    for (let stat of stats) {
-      readingTime += stat.stats.readingTime;
-      words += stat.stats.words;
-    }
-    res.status(200).json({ readingTime, words });
-  }).catch(next);
+  )
+    .then((stats) => {
+      let readingTime = 0,
+        words = 0;
+      for (let stat of stats) {
+        readingTime += stat.stats.readingTime;
+        words += stat.stats.words;
+      }
+      res.status(200).json({ readingTime, words });
+    })
+    .catch(next);
 });

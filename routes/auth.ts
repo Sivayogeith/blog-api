@@ -4,10 +4,11 @@ import bcrypt from "bcrypt";
 import type { User, Session } from "../types.js";
 import { db } from "../app.js";
 
-import pgp, { as } from "pg-promise";
+import pgp from "pg-promise";
 import { adminOnly, authenticated } from "../middleware/authMiddleware.js";
 
 export const authRouter = express.Router();
+const { as } = pgp;
 
 authRouter.post("/register", async (req, res, next) => {
   const { username, password } = req.body
