@@ -1,11 +1,11 @@
 import express from "express";
 import bcrypt from "bcrypt";
 
-import type { User, Session } from "../types";
-import { db } from "../app";
+import type { User, Session } from "../types.js";
+import { db } from "../app.js";
 
 import pgp, { as } from "pg-promise";
-import { adminOnly, authenticated } from "../middleware/authMiddleware";
+import { adminOnly, authenticated } from "../middleware/authMiddleware.js";
 
 export const authRouter = express.Router();
 

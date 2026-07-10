@@ -1,4 +1,4 @@
-import { app, db } from "../app";
+import { app, db } from "../app.js";
 import debugLib from "debug";
 import http from "http";
 import { type AddressInfo } from "net";

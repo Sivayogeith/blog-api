@@ -1,8 +1,8 @@
 import express from "express";
-import { db } from "../app";
+import { db } from "../app.js";
 import pgp, { as } from "pg-promise";
-import type { Comment } from "../types";
-import { adminOnly } from "../middleware/authMiddleware";
+import type { Comment } from "../types.js";
+import { adminOnly } from "../middleware/authMiddleware.js";
 
 export const commentsRouter = express.Router();
 

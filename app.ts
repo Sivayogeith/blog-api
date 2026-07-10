@@ -11,10 +11,10 @@ import pgSession from "connect-pg-simple";
 
 import "dotenv/config";
 
-import { postsRouter } from "./routes/posts";
-import { indexRouter } from "./routes";
-import { authRouter } from "./routes/auth";
-import { adminRouter } from "./routes/admin";
+import { postsRouter } from "./routes/posts.js";
+import { indexRouter } from "./routes/index.js";
+import { authRouter } from "./routes/auth.js";
+import { adminRouter } from "./routes/admin.js";
 
 export const app = express();
 export const db = pgPromise()(process.env.POSTGRES_ADDRESS);

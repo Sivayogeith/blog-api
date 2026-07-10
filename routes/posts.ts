@@ -1,7 +1,7 @@
 import express from "express";
 
-import type { Comment, Post } from "../types";
-import { db } from "../app";
+import type { Comment, Post } from "../types.js";
+import { db } from "../app.js";
 
 export const postsRouter = express.Router();
 
