@@ -1,8 +1,8 @@
 import express from "express";
-import { db } from "../app";
-import type { Post } from "../types";
+import { db } from "../app.js";
+import type { Post } from "../types.js";
 import pgp, { as } from "pg-promise";
-import { adminOnly } from "../middleware/authMiddleware";
+import { adminOnly } from "../middleware/authMiddleware.js";
 
 export const adminRouter = express.Router();
 
