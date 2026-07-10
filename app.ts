@@ -16,8 +16,8 @@ import { indexRouter } from "./routes/index.js";
 import { authRouter } from "./routes/auth.js";
 import { adminRouter } from "./routes/admin.js";
 
-export const app = express();
-export const db = pgPromise()(process.env.POSTGRES_ADDRESS);
+const app = express();
+const db = pgPromise()(process.env.POSTGRES_ADDRESS);
 
 app.use(
   session({
@@ -45,3 +45,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.log("ERROR: ", err);
   return res.status(500).send("ERROR:" + err);
 });
+
+export default app;
+export { db };
