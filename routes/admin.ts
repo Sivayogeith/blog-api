@@ -10,9 +10,8 @@ const { as } = pgp;
 adminRouter.use(adminOnly);
 
 adminRouter.post("/createPost", async (req, res, next) => {
-  const { title, body, slug } = req.body;
-
-  if (![title, body, slug].every((v) => typeof v === "string")) {
+  const { title, body, slug, stats } = req.body;
+  if (![title, body, slug, stats.readingTime, stats.words].every((v) => typeof v === "string" || "number")) {
     return res.status(400).send("Please enter all the needed fields!");
   }
 
@@ -20,6 +19,7 @@ adminRouter.post("/createPost", async (req, res, next) => {
     title,
     body,
     slug,
+    stats
   })
     .then((_) => {
       return res.status(200).send("Successfully created post :D");
