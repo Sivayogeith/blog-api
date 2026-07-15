@@ -2,6 +2,7 @@ import express from "express";
 
 import type { Comment, Post } from "../types.js";
 import { db } from "../app.js";
+import { authenticated } from "../middleware/authMiddleware.js";
 
 export const postsRouter = express.Router();
 
@@ -34,20 +35,16 @@ postsRouter.get("/:id/comments", async (req, res, next) => {
     .catch(next);
 });
 
-postsRouter.post("/:id/comment", async (req, res, next) => {
-  if (!req.session.username) {
-    res.status(403).send("You aren't logged in :(");
-  }
+postsRouter.post("/:id/comment", authenticated, async (req, res, next) => {
+  const { message } = req.body;
 
-  const { from, message } = req.body;
-
-  if (![from, req.params.id, message].every((v) => typeof v === "string" || "number")) {
+  if (![req.params.id, message].every((v) => typeof v === "string" || "number")) {
     return res.status(400).send("Please enter all the needed fields!");
   }
 
   db.query<Comment[]>(
     "INSERT INTO comments (${this:name}) VALUES (${this:csv})",
-    { from, on: req.params.id, message },
+    { from: req.session.username, on: req.params.id, message },
   )
     .then((_) => {
       return res.status(200).send("Successfully created comment :D");

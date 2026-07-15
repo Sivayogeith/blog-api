@@ -15,9 +15,19 @@ import { postsRouter } from "./routes/posts.js";
 import { indexRouter } from "./routes/index.js";
 import { authRouter } from "./routes/auth.js";
 import { adminRouter } from "./routes/admin.js";
+import { commentsRouter } from "./routes/comments.js";
+import { rateLimit } from "express-rate-limit";
 
 const app = express();
 const db = pgPromise()(process.env.POSTGRES_ADDRESS);
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  ipv6Subnet: 56,
+});
 
 app.use(
   session({
@@ -31,6 +41,7 @@ app.use(
   }),
 );
 
+app.use(limiter);
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -40,6 +51,7 @@ app.use("/", indexRouter);
 app.use("/posts", postsRouter);
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
+app.use("/comments", commentsRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.log("ERROR: ", err);

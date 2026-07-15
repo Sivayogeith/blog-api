@@ -4,14 +4,6 @@
     "": {
       "name": "blog-api",
       "dependencies": {
-        "@types/bcrypt": "^6.0.0",
-        "@types/connect-pg-simple": "^7.0.3",
-        "@types/cookie-parser": "^1.4.10",
-        "@types/debug": "^4.1.13",
-        "@types/express": "^5.0.6",
-        "@types/express-session": "^1.19.0",
-        "@types/morgan": "^1.9.10",
-        "@types/pg-promise": "^5.4.3",
         "bcrypt": "^6.0.0",
         "bun": "^1.3.14",
         "connect-pg-simple": "^10.0.0",
@@ -19,12 +11,21 @@
         "debug": "~2.6.9",
         "dotenv": "^17.4.2",
         "express": "~4.17.1",
+        "express-rate-limit": "^8.5.2",
         "express-session": "^1.19.0",
         "morgan": "~1.10.0",
         "pg-promise": "^12.6.2",
       },
       "devDependencies": {
+        "@types/bcrypt": "^6.0.0",
         "@types/bun": "latest",
+        "@types/connect-pg-simple": "^7.0.3",
+        "@types/cookie-parser": "^1.4.10",
+        "@types/debug": "^4.1.13",
+        "@types/express": "^5.0.6",
+        "@types/express-session": "^1.19.0",
+        "@types/morgan": "^1.9.10",
+        "@types/pg-promise": "^5.4.3",
       },
       "peerDependencies": {
         "typescript": "^5",
@@ -152,6 +153,8 @@
 
     "express": ["express@4.17.3", "", { "dependencies": { "accepts": "~1.3.8", "array-flatten": "1.1.1", "body-parser": "1.19.2", "content-disposition": "0.5.4", "content-type": "~1.0.4", "cookie": "0.4.2", "cookie-signature": "1.0.6", "debug": "2.6.9", "depd": "~1.1.2", "encodeurl": "~1.0.2", "escape-html": "~1.0.3", "etag": "~1.8.1", "finalhandler": "~1.1.2", "fresh": "0.5.2", "merge-descriptors": "1.0.1", "methods": "~1.1.2", "on-finished": "~2.3.0", "parseurl": "~1.3.3", "path-to-regexp": "0.1.7", "proxy-addr": "~2.0.7", "qs": "6.9.7", "range-parser": "~1.2.1", "safe-buffer": "5.2.1", "send": "0.17.2", "serve-static": "1.14.2", "setprototypeof": "1.2.0", "statuses": "~1.5.0", "type-is": "~1.6.18", "utils-merge": "1.0.1", "vary": "~1.1.2" } }, "sha512-yuSQpz5I+Ch7gFrPCk4/c+dIBKlQUxtgwqzph132bsT6qhuzss6I8cLJQz7B3rFblzd6wtcI0ZbGltH/C4LjUg=="],
 
+    "express-rate-limit": ["express-rate-limit@8.5.2", "", { "dependencies": { "ip-address": "^10.2.0" }, "peerDependencies": { "express": ">= 4.11" } }, "sha512-5Kb34ipNX694DH48vN9irak1Qx30nb0PLYHXfJgw4YEjiC3ZEmZJhwOp+VfiCYwFzvFTdB9QkArYS5kXa2cx2A=="],
+
     "express-session": ["express-session@1.19.0", "", { "dependencies": { "cookie": "~0.7.2", "cookie-signature": "~1.0.7", "debug": "~2.6.9", "depd": "~2.0.0", "on-headers": "~1.1.0", "parseurl": "~1.3.3", "safe-buffer": "~5.2.1", "uid-safe": "~2.1.5" } }, "sha512-0csaMkGq+vaiZTmSMMGkfdCOabYv192VbytFypcvI0MANrp+4i/7yEkJ0sbAEhycQjntaKGzYfjfXQyVb7BHMA=="],
 
     "finalhandler": ["finalhandler@1.1.2", "", { "dependencies": { "debug": "2.6.9", "encodeurl": "~1.0.2", "escape-html": "~1.0.3", "on-finished": "~2.3.0", "parseurl": "~1.3.3", "statuses": "~1.5.0", "unpipe": "~1.0.0" } }, "sha512-aAWcW57uxVNrQZqFXjITpW3sIUQmHGG3qSb9mUah9MgMC4NeWhNOlNjXEYq3HjRAvL6arUviZGGJsBg6z0zsWA=="],
@@ -165,6 +168,8 @@
     "iconv-lite": ["iconv-lite@0.4.24", "", { "dependencies": { "safer-buffer": ">= 2.1.2 < 3" } }, "sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA=="],
 
     "inherits": ["inherits@2.0.4", "", {}, "sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ=="],
+
+    "ip-address": ["ip-address@10.2.0", "", {}, "sha512-/+S6j4E9AHvW9SWMSEY9Xfy66O5PWvVEJ08O0y5JGyEKQpojb0K0GKpz/v5HJ/G0vi3D2sjGK78119oXZeE0qA=="],
 
     "ipaddr.js": ["ipaddr.js@1.9.1", "", {}, "sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g=="],
 

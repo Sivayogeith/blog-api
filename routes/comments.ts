@@ -2,12 +2,12 @@ import express from "express";
 import { db } from "../app.js";
 import pgp from "pg-promise";
 import type { Comment } from "../types.js";
-import { adminOnly } from "../middleware/authMiddleware.js";
+import { authenticated } from "../middleware/authMiddleware.js";
 
 export const commentsRouter = express.Router();
 const { as } = pgp;
 
-commentsRouter.post("/:id/edit", adminOnly, async (req, res, next) => {
+commentsRouter.post("/:id/edit", authenticated, async (req, res, next) => {
   if (!req.params.id) {
     return res.status(404).send("Please enter the id of the comment!");
   }
@@ -29,7 +29,7 @@ commentsRouter.post("/:id/edit", adminOnly, async (req, res, next) => {
     .catch(next);
 });
 
-commentsRouter.delete("/:id/delete", adminOnly, async (req, res, next) => {
+commentsRouter.delete("/:id/delete", authenticated, async (req, res, next) => {
     if (!req.params.id) {
         return res.status(404).send("Please enter the id of the comment!")
     }
