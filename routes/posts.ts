@@ -7,7 +7,7 @@ import { authenticated } from "../middleware/authMiddleware.js";
 export const postsRouter = express.Router();
 
 postsRouter.get("/", async (req, res, next) => {
-  db.query<Post[]>("SELECT * FROM posts")
+  db.query<Post[]>("SELECT * FROM posts ORDER BY created_at DESC")
     .then((posts) => {
       return res.status(200).json(posts);
     })
