@@ -27,7 +27,11 @@ export interface Post {
     readingTime: number;
     words: number;
   }
-  image: string;
+  cover?: {
+    type: string;
+    src: string;
+    caption: string;
+  }
 }
 
 export interface User {
