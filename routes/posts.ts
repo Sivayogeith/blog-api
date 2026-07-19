@@ -28,7 +28,7 @@ postsRouter.get("/:slug", async (req, res, next) => {
 // Comments
 
 postsRouter.get("/:id/comments", async (req, res, next) => {
-  db.query<Comment[]>("SELECT * FROM comments WHERE on = $1", req.params.id)
+  db.query<Comment[]>(`SELECT * FROM comments WHERE "on" = $1`, parseInt(req.params.id))
     .then((comments) => {
       res.status(200).json(comments);
     })
