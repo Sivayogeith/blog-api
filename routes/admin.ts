@@ -10,8 +10,8 @@ const { as } = pgp;
 adminRouter.use(adminOnly);
 
 adminRouter.post("/createPost", async (req, res, next) => {
-  const { title, body, slug, stats } = req.body;
-  if (![title, body, slug, stats.readingTime, stats.words].every((v) => typeof v === "string" || "number")) {
+  const { title, body, slug, stats, cover } = req.body;
+  if (![title, body, slug, stats.readingTime, stats.words, cover.src, cover.caption, cover.type].every((v) => typeof v === "string" || "number")) {
     return res.status(400).send("Please enter all the needed fields!");
   }
 
