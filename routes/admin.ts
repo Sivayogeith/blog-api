@@ -50,7 +50,7 @@ adminRouter.post("/editPost", async (req, res, next) => {
     return res.status(404).send("Please enter the id of the post!");
   }
 
-  const cs = new (pgp().helpers.ColumnSet)(["title", "body", "slug", "stats"], {
+  const cs = new (pgp().helpers.ColumnSet)(["title", "body", "slug", "stats", "cover"], {
     table: "posts",
   });
   const where = as.format("WHERE id = $1", req.body.id);
