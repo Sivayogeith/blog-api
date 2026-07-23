@@ -39,6 +39,7 @@ export interface User {
   username: string;
   password: string;
   isAdmin: boolean;
+  cdnAPIKey?: string;
 }
 
 export interface Session {
