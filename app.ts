@@ -17,6 +17,7 @@ import { authRouter } from "./routes/auth.js";
 import { adminRouter } from "./routes/admin.js";
 import { commentsRouter } from "./routes/comments.js";
 import { rateLimit } from "express-rate-limit";
+import { userRouter } from "./routes/users.js";
 
 const app = express();
 const db = pgPromise()(process.env.POSTGRES_ADDRESS);
@@ -52,6 +53,7 @@ app.use("/posts", postsRouter);
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 app.use("/comments", commentsRouter);
+app.use("/user", userRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.log("ERROR: ", err);

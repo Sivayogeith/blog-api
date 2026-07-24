@@ -5,7 +5,8 @@ import type { User, Session } from "../types.js";
 import { db } from "../app.js";
 
 import pgp from "pg-promise";
-import { adminOnly, authenticated } from "../middleware/authMiddleware.js";
+import { authenticated } from "../middleware/authMiddleware.js";
+import session from "express-session";
 
 export const authRouter = express.Router();
 const { as } = pgp;
@@ -100,7 +101,7 @@ authRouter.get("/logout", authenticated, async (req, res, next) => {
   });
 });
 
-authRouter.post("/edit", adminOnly, async (req, res, next) => {
+authRouter.post("/edit", authenticated, async (req, res, next) => {
   const cs = new (pgp().helpers.ColumnSet)(["username"], {
     table: "users",
   });
