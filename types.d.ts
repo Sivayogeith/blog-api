@@ -12,6 +12,7 @@ declare global {
 declare module "express-session" {
   export interface SessionData {
     username: string;
+    name: string;
     userId: number;
     isAdmin: boolean;
   }
@@ -37,8 +38,10 @@ export interface Post {
 export interface User {
   id: number;
   username: string;
+  name: string;
   password: string;
   isAdmin: boolean;
+  image: string;
   cdnAPIKey?: string;
 }
 

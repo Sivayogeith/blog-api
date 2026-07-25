@@ -12,13 +12,19 @@ export const authRouter = express.Router();
 const { as } = pgp;
 
 authRouter.post("/register", async (req, res, next) => {
-  const { username, password } = req.body;
+  const { username, name, password, image } = req.body;
 
-  if (username.length < 4 || password.length < 8) {
+  if (
+    username.length < 4 ||
+    username.length > 15 ||
+    name.length < 4 ||
+    name.length > 15 ||
+    password.length < 8
+  ) {
     return res
       .status(400)
       .send(
-        "Username must be at least 4 characters long, and password must be at least 8 characters long",
+        "Username must be at least 4 chars long and maximum 15 chars, Name must be at least 4 chars long and maximum 15 chars and Password must be at least 8 chars long",
       );
   }
 
@@ -36,9 +42,10 @@ authRouter.post("/register", async (req, res, next) => {
       : db
           .one<{ id: number }>(
             "INSERT INTO users (${this:name}) VALUES (${this:csv}) RETURNING id",
-            { username, password: hashedPass },
+            { username, password: hashedPass, name, image },
           )
           .then(({ id }) => {
+            req.session.name = name;
             req.session.username = username;
             req.session.userId = id;
             req.session.isAdmin = false;
@@ -64,6 +71,7 @@ authRouter.post("/login", async (req, res, next) => {
       bcrypt.compare(password, user.password, async (err, result) => {
         if (result) {
           req.session.username = username;
+          req.session.name = user.name;
           req.session.userId = user.id;
           req.session.isAdmin = user.isAdmin;
           return res.status(200).send("Successfully logged in :D");
@@ -102,7 +110,7 @@ authRouter.get("/logout", authenticated, async (req, res, next) => {
 });
 
 authRouter.post("/edit", authenticated, async (req, res, next) => {
-  const cs = new (pgp().helpers.ColumnSet)(["username"], {
+  const cs = new (pgp().helpers.ColumnSet)(["username", "name", "image"], {
     table: "users",
   });
   const where = as.format("WHERE id = $1", req.session.userId);
