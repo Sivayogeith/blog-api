@@ -38,6 +38,7 @@ adminRouter.post("/createPost", async (req, res, next) => {
     slug,
     stats,
     cover,
+    author: req.session.username
   })
     .then((_) => {
       return res.status(200).send("Successfully created post :D");

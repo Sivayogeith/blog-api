@@ -17,7 +17,7 @@ import { authRouter } from "./routes/auth.js";
 import { adminRouter } from "./routes/admin.js";
 import { commentsRouter } from "./routes/comments.js";
 import { rateLimit } from "express-rate-limit";
-import { userRouter } from "./routes/users.js";
+import { userRouter } from "./routes/user.js";
 
 const app = express();
 const db = pgPromise()(process.env.POSTGRES_ADDRESS);

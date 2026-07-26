@@ -93,6 +93,7 @@ authRouter.get("/me", async (req, res, next) => {
       const session = sessions[0];
       return res.status(200).json({
         username: session?.sess.username,
+        name: session?.sess.name,
         userId: session?.sess.userId,
         isAdmin: session?.sess.isAdmin,
       });

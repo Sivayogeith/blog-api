@@ -33,6 +33,7 @@ export interface Post {
     src: string;
     caption: string;
   }
+  author: string;
 }
 
 export interface User {
