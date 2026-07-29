@@ -27,24 +27,24 @@ postsRouter.get("/:slug", async (req, res, next) => {
 
 // Comments
 
-postsRouter.get("/:id/comments", async (req, res, next) => {
-  db.query<Comment[]>(`SELECT * FROM comments WHERE "on" = $1`, parseInt(req.params.id))
+postsRouter.get("/:slug/comments", async (req, res, next) => {
+  db.query<Comment[]>(`SELECT * FROM comments WHERE "on" = $1`, req.params.slug)
     .then((comments) => {
       res.status(200).json(comments);
     })
     .catch(next);
 });
 
-postsRouter.post("/:id/comment", authenticated, async (req, res, next) => {
+postsRouter.post("/:slug/comment", authenticated, async (req, res, next) => {
   const { message } = req.body;
 
-  if (![req.params.id, message].every((v) => typeof v === "string" || "number")) {
+  if (![req.params.slug, message].every((v) => typeof v === "string" || "number")) {
     return res.status(400).send("Please enter all the needed fields!");
   }
 
   db.query<Comment[]>(
     "INSERT INTO comments (${this:name}) VALUES (${this:csv})",
-    { from: req.session.username, on: req.params.id, message },
+    { from: req.session.username, on: req.params.slug, message },
   )
     .then((_) => {
       return res.status(200).send("Successfully created comment :D");
