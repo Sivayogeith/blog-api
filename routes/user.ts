@@ -1,5 +1,6 @@
 import express from "express";
 import { db } from "../app.js";
+import type { Comment, Post } from "../types.js";
 
 export const userRouter = express.Router();
 
@@ -30,3 +31,15 @@ userRouter.get("/:username/stats", (req, res, next) => {
     })
     .catch(next);
 });
+
+userRouter.get("/:username/posts", (req, res, next) => {
+  db.query<Post[]>("SELECT * FROM posts WHERE author = $1", req.params.username).then(posts => {
+    res.status(200).json(posts)
+  }).catch(next)
+})
+
+userRouter.get("/:username/comments", (req, res, next) => {
+  db.query<Comment[]>(`SELECT * FROM comments WHERE "from" = $1`, req.params.username).then(comments => {
+    res.status(200).json(comments)
+  }).catch(next)
+})
