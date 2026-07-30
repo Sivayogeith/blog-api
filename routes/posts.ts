@@ -18,10 +18,10 @@ postsRouter.get("/", async (req, res, next) => {
 postsRouter.get("/:slug", async (req, res, next) => {
   db.query<Post[]>("SELECT * FROM posts WHERE slug = $1", req.params.slug)
     .then((post) => {
-      if (post.length){
+      if (post.length) {
         return res.status(200).json(post[0]);
       }
-      return res.status(404).send("Post not found :(")
+      return res.status(404).send("Post not found :(");
     })
     .catch(next);
 });
@@ -29,19 +29,24 @@ postsRouter.get("/:slug", async (req, res, next) => {
 // Comments
 
 postsRouter.get("/:slug/comments", async (req, res, next) => {
-  db.query<Comment[]>(`SELECT * FROM comments WHERE "on" = $1`, req.params.slug)
+  db.query<Comment & { image: string }[]>(
+    `SELECT c."from", c.message, c.created_at, c.id, u.image FROM comments c INNER JOIN users u ON c."from" = u.username WHERE c."on" = $1`,
+    req.params.slug,
+  )
     .then((comments) => {
       res.status(200).json(comments);
     })
     .catch(next);
 });
 
-postsRouter.use(limiter)
+postsRouter.use(limiter);
 
 postsRouter.post("/:slug/comment", authenticated, async (req, res, next) => {
   const { message } = req.body;
 
-  if (![req.params.slug, message].every((v) => typeof v === "string" || "number")) {
+  if (
+    ![req.params.slug, message].every((v) => typeof v === "string" || "number")
+  ) {
     return res.status(400).send("Please enter all the needed fields!");
   }
 
