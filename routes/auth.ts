@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 import type { User, Session } from "../types.js";
 import { db } from "../app.js";
+import { limiter } from "../middleware/limiter.js";
 
 import pgp from "pg-promise";
 import { authenticated } from "../middleware/authMiddleware.js";
@@ -10,6 +11,26 @@ import session from "express-session";
 
 export const authRouter = express.Router();
 const { as } = pgp;
+
+authRouter.get("/me", async (req, res, next) => {
+  if (!req.sessionID) {
+    return res.status(403).send("You don't have a session!");
+  }
+
+  db.query<Session[]>("SELECT * FROM session WHERE sid = $1", req.sessionID)
+    .then((sessions) => {
+      const session = sessions[0];
+      return res.status(200).json({
+        username: session?.sess.username,
+        name: session?.sess.name,
+        userId: session?.sess.userId,
+        isAdmin: session?.sess.isAdmin,
+      });
+    })
+    .catch(next);
+});
+
+authRouter.use(limiter)
 
 authRouter.post("/register", async (req, res, next) => {
   const { username, name, password, image } = req.body;
@@ -78,24 +99,6 @@ authRouter.post("/login", async (req, res, next) => {
         } else {
           return res.status(403).send("Wrong password :(");
         }
-      });
-    })
-    .catch(next);
-});
-
-authRouter.get("/me", async (req, res, next) => {
-  if (!req.sessionID) {
-    return res.status(403).send("You don't have a session!");
-  }
-
-  db.query<Session[]>("SELECT * FROM session WHERE sid = $1", req.sessionID)
-    .then((sessions) => {
-      const session = sessions[0];
-      return res.status(200).json({
-        username: session?.sess.username,
-        name: session?.sess.name,
-        userId: session?.sess.userId,
-        isAdmin: session?.sess.isAdmin,
       });
     })
     .catch(next);

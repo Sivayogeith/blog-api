@@ -3,9 +3,12 @@ import { db } from "../app.js";
 import pgp from "pg-promise";
 import type { Comment } from "../types.js";
 import { authenticated } from "../middleware/authMiddleware.js";
+import { limiter } from "../middleware/limiter.js";
 
 export const commentsRouter = express.Router();
 const { as } = pgp;
+
+commentsRouter.use(limiter)
 
 commentsRouter.post("/:id/edit", authenticated, async (req, res, next) => {
   if (!req.params.id) {

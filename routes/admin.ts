@@ -5,6 +5,7 @@ import pgp from "pg-promise";
 import { adminOnly } from "../middleware/authMiddleware.js";
 import axios from "axios";
 import multer, { memoryStorage } from "multer";
+import { limiter } from "../middleware/limiter.js";
 
 export const adminRouter = express.Router();
 const { as } = pgp;
@@ -15,6 +16,24 @@ const upload = multer({
 });
 
 adminRouter.use(adminOnly);
+
+adminRouter.get("/stats", async (req, res, next) => {
+  db.query<{ stats: { readingTime: number; words: number } }[]>(
+    "SELECT (stats) FROM posts",
+  )
+    .then((stats) => {
+      let readingTime = 0,
+        words = 0;
+      for (let stat of stats) {
+        readingTime += stat.stats.readingTime;
+        words += stat.stats.words;
+      }
+      res.status(200).json({ readingTime, words });
+    })
+    .catch(next);
+});
+
+adminRouter.use(limiter)
 
 adminRouter.post("/createPost", async (req, res, next) => {
   const { title, body, slug, stats, cover } = req.body;
@@ -73,22 +92,6 @@ adminRouter.delete("/deletePost", async (req, res, next) => {
   db.query("DELETE FROM posts WHERE id = $1", req.body.id)
     .then(() => {
       return res.status(200).send("Successfully deleted the post :D");
-    })
-    .catch(next);
-});
-
-adminRouter.get("/stats", async (req, res, next) => {
-  db.query<{ stats: { readingTime: number; words: number } }[]>(
-    "SELECT (stats) FROM posts",
-  )
-    .then((stats) => {
-      let readingTime = 0,
-        words = 0;
-      for (let stat of stats) {
-        readingTime += stat.stats.readingTime;
-        words += stat.stats.words;
-      }
-      res.status(200).json({ readingTime, words });
     })
     .catch(next);
 });

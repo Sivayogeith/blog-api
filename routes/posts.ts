@@ -3,6 +3,7 @@ import express from "express";
 import type { Comment, Post } from "../types.js";
 import { db } from "../app.js";
 import { authenticated } from "../middleware/authMiddleware.js";
+import { limiter } from "../middleware/limiter.js";
 
 export const postsRouter = express.Router();
 
@@ -34,6 +35,8 @@ postsRouter.get("/:slug/comments", async (req, res, next) => {
     })
     .catch(next);
 });
+
+postsRouter.use(limiter)
 
 postsRouter.post("/:slug/comment", authenticated, async (req, res, next) => {
   const { message } = req.body;
