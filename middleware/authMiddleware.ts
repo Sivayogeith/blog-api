@@ -14,3 +14,11 @@ export const authenticated: RequestHandler = (req, res, next) => {
 
   return next()
 }
+
+export const ownerOnly: RequestHandler = (req, res, next) => {
+  if (!req.session.isOwner) {
+    return res.status(403).send("You are not the OWNER! (sage :3)")
+  }
+
+  return next()
+}

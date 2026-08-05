@@ -14,7 +14,7 @@ export const userRouter = express.Router();
 
 userRouter.get("/:username", (req, res, next) => {
   db.oneOrNone(
-    `SELECT username, image, name, "isAdmin" FROM users WHERE username = $1`,
+    `SELECT username, image, name, "isAdmin", "isOwner" FROM users WHERE username = $1`,
     req.params.username,
   )
     .then((user) => {

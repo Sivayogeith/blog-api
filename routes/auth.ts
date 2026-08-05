@@ -25,12 +25,13 @@ authRouter.get("/me", async (req, res, next) => {
         name: session?.sess.name,
         userId: session?.sess.userId,
         isAdmin: session?.sess.isAdmin,
+        isOwner: session?.sess.isOwner,
       });
     })
     .catch(next);
 });
 
-authRouter.use(limiter)
+authRouter.use(limiter);
 
 authRouter.post("/register", async (req, res, next) => {
   const { username, name, password, image } = req.body;
@@ -70,6 +71,7 @@ authRouter.post("/register", async (req, res, next) => {
             req.session.username = username;
             req.session.userId = id;
             req.session.isAdmin = false;
+            req.session.isOwner = false;
             return res.status(200).send("Successfully registered user :D");
           })
           .catch(next),
@@ -95,6 +97,8 @@ authRouter.post("/login", async (req, res, next) => {
           req.session.name = user.name;
           req.session.userId = user.id;
           req.session.isAdmin = user.isAdmin;
+          req.session.isOwner = user.isOwner;
+          
           return res.status(200).send("Successfully logged in :D");
         } else {
           return res.status(403).send("Wrong password :(");

@@ -16,6 +16,7 @@ declare module "express-session" {
     name: string;
     userId: number;
     isAdmin: boolean;
+    isOwner: boolean;
   }
 }
 
@@ -43,6 +44,7 @@ export interface User {
   name: string;
   password: string;
   isAdmin: boolean;
+  isOwner: boolean;
   image: string;
   cdnAPIKey?: string;
 }
