@@ -5,6 +5,12 @@ import { db } from "../app.js";
 export const ownerRouter = express.Router();
 ownerRouter.use(ownerOnly);
 
+ownerRouter.get("/getUsers", (req, res, next) => {
+  db.query(`SELECT id, name, username, "isAdmin", "isOwner", image FROM users`)
+    .then((users) => res.status(200).json(users))
+    .catch(next);
+});
+
 ownerRouter.post("/addAdmin", (req, res, next) => {
   const { username } = req.body;
   db.none(`UPDATE users SET "isAdmin" = true WHERE username = $1`, username)
@@ -14,7 +20,7 @@ ownerRouter.post("/addAdmin", (req, res, next) => {
 
 ownerRouter.delete("/removeAdmin", (req, res, next) => {
   const { username } = req.body;
-  db.none(`UPDATE users SET "isAdmi" = false WHERE username = $1`, username)
+  db.none(`UPDATE users SET "isAdmin" = false WHERE username = $1`, username)
     .then((_) =>
       res.status(200).send(`Successfully removed ${username} from Admins!`),
     )
