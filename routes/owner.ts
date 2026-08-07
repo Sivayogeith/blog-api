@@ -6,7 +6,7 @@ export const ownerRouter = express.Router();
 ownerRouter.use(ownerOnly);
 
 ownerRouter.get("/getUsers", (req, res, next) => {
-  db.query(`SELECT id, name, username, "isAdmin", "isOwner", image FROM users`)
+  db.query(`SELECT id, name, username, "isAdmin", "isOwner", image FROM users ORDER BY id`)
     .then((users) => res.status(200).json(users))
     .catch(next);
 });
