@@ -22,6 +22,9 @@ import { ownerRouter } from "./routes/owner.js";
 const app = express();
 const db = pgPromise()(process.env.POSTGRES_ADDRESS);
 
+const DEFAULT_PFP =
+  "https://cdn.hackclub.com/019fb16b-462b-7081-a1e7-9625eec46b95/icon-Capybara.png";
+
 app.use(
   session({
     store: new (pgSession(session))({
@@ -45,7 +48,7 @@ app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 app.use("/comments", commentsRouter);
 app.use("/user", userRouter);
-app.use("/owner", ownerRouter)
+app.use("/owner", ownerRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.log("ERROR: ", err);
@@ -53,4 +56,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 export default app;
-export { db };
+export { db, DEFAULT_PFP };

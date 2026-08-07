@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 
 import type { User, Session } from "../types.js";
-import { db } from "../app.js";
+import { db, DEFAULT_PFP } from "../app.js";
 import { limiter } from "../middleware/limiter.js";
 
 import pgp from "pg-promise";
@@ -34,7 +34,7 @@ authRouter.get("/me", async (req, res, next) => {
 authRouter.use(limiter);
 
 authRouter.post("/register", async (req, res, next) => {
-  const { username, name, password, image } = req.body;
+  let { username, name, password, image } = req.body;
 
   if (
     username.length < 4 ||
@@ -56,6 +56,10 @@ authRouter.post("/register", async (req, res, next) => {
   );
   if (doesUserExist.length) {
     return res.status(409).send("Username is already in use :(");
+  }
+
+  if (image && image !== "") {
+    image = DEFAULT_PFP;
   }
 
   bcrypt.hash(password, 10, (err, hashedPass) =>
@@ -98,7 +102,7 @@ authRouter.post("/login", async (req, res, next) => {
           req.session.userId = user.id;
           req.session.isAdmin = user.isAdmin;
           req.session.isOwner = user.isOwner;
-          
+
           return res.status(200).send("Successfully logged in :D");
         } else {
           return res.status(403).send("Wrong password :(");
@@ -118,6 +122,9 @@ authRouter.get("/logout", authenticated, async (req, res, next) => {
 });
 
 authRouter.post("/edit", authenticated, async (req, res, next) => {
+  if (req.body.image == "") {
+    req.body.image = DEFAULT_PFP
+  }
   const cs = new (pgp().helpers.ColumnSet)(["username", "name", "image"], {
     table: "users",
   });
