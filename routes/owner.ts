@@ -6,15 +6,15 @@ export const ownerRouter = express.Router();
 ownerRouter.use(ownerOnly);
 
 ownerRouter.get("/getUsers", (req, res, next) => {
-  db.query(`SELECT id, name, username, "isAdmin", "isOwner", image FROM users ORDER BY id`)
+  db.query(`SELECT id, name, username, "isAdmin", "isInvitedAdmin", "isOwner", image FROM users ORDER BY id`)
     .then((users) => res.status(200).json(users))
     .catch(next);
 });
 
-ownerRouter.post("/addAdmin", (req, res, next) => {
+ownerRouter.post("/inviteAdmin", (req, res, next) => {
   const { username } = req.body;
-  db.none(`UPDATE users SET "isAdmin" = true WHERE username = $1`, username)
-    .then((_) => res.status(200).send(`Successfully made ${username} a Admin!`))
+  db.none(`UPDATE users SET "isInvitedAdmin" = true WHERE username = $1`, username)
+    .then((_) => res.status(200).send(`Successfully invited ${username} to Admins!`))
     .catch(next);
 });
 
