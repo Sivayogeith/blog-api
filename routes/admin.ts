@@ -15,6 +15,17 @@ const upload = multer({
   limits: { fileSize: 100 * 1024 * 1024 },
 });
 
+adminRouter.get("/checkInvite", authenticated, (req, res, next) => {
+  db.one(
+    `SELECT "isInvitedAdmin" FROM users WHERE username = $1`,
+    req.session.username,
+  )
+    .then((data) => {
+      res.status(data.isInvitedAdmin ? 200 : 403).send(data.isInvitedAdmin);
+    })
+    .catch(next);
+});
+
 adminRouter.post("/respondInvite", authenticated, (req, res, next) => {
   const { accept } = req.body;
   if (typeof accept !== "boolean") {
