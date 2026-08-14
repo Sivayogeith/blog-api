@@ -40,6 +40,7 @@ adminRouter.post("/respondInvite", authenticated, (req, res, next) => {
       if (!username) {
         return res.status(403).send("You are not invited to Admins!");
       }
+      req.session.isAdmin = accept
       return res
         .status(200)
         .send(
