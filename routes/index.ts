@@ -1,7 +1,15 @@
+import axios from "axios";
 import express from  "express";
 
 export const indexRouter = express.Router();
 
-indexRouter.get('/', function(req, res, next) {
+indexRouter.get('/', (req, res, next) => {
   res.send('ITS WORKING');
 });
+
+indexRouter.get("/totalTime", (req, res, next) => {
+  axios.get("https://hackatime.hackclub.com/api/v1/users/themeowingsage/projects/details?projects=blog,%20blog-api").then((response) => {
+    const projects = response.data.projects
+    return res.status(response.status).send((projects[0].total_seconds + projects[1].total_seconds).toString())
+  }).catch(next)
+})
