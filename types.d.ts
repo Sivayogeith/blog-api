@@ -6,6 +6,7 @@ declare global {
       POSTGRES_ADDRESS: string;
       SESSION_SECRET: string;
       CDN_API_KEY: string;
+      GITHUB_TOKEN: string;
     }
   }
 }

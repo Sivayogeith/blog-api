@@ -32,26 +32,31 @@ indexRouter.get("/macondoProject", (req, res, next) => {
 });
 
 indexRouter.get("/totalCommits", (req, res, next) => {
+  const headers = {
+    Authorization: "Bearer " + process.env.GITHUB_TOKEN,
+  };
   Promise.all([
     axios.get(
       "https://api.github.com/repos/sivayogeith/blog/commits?sha=main&per_page=1&page=1",
+      { headers },
     ),
     axios.get(
       "https://api.github.com/repos/sivayogeith/blog-api/commits?sha=main&per_page=1&page=1",
+      { headers },
     ),
   ])
     .then(([blog, blogAPI]) => {
+      const getCount = (res: any) =>
+        parseInt(
+          new URL(
+            res.headers.get("Link").match(/<([^>]+)>;\s*rel="last"/)?.[1],
+          ).searchParams.get("page")!,
+        );
 
-      const getCount = (res: any) => parseInt(new URL(
-        res.headers.get("Link").match(/<([^>]+)>;\s*rel="last"/)?.[1],
-      ).searchParams.get("page")!);
-
-      return res
-        .status(200)
-        .json({
-          blog: getCount(blog),
-          blogAPI: getCount(blogAPI)
-        });
+      return res.status(200).json({
+        blog: getCount(blog),
+        blogAPI: getCount(blogAPI),
+      });
     })
     .catch(next);
 });
