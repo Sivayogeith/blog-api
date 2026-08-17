@@ -30,3 +30,13 @@ indexRouter.get("/macondoProject", (req, res, next) => {
       return res.status(response.status).json(response.data);
     });
 });
+
+indexRouter.get("/githubCommits", (req, res, next) => {
+  Promise.all([
+    axios.get("https://api.github.com/repos/sivayogeith/blog/commits"),
+    axios.get("https://api.github.com/repos/sivayogeith/blog-api/commits"),
+  ]).then(([blog, blogAPI]) => {
+    return res
+      .status(200).json({blog: req.query.count ? blog.data.length : blog.data, blogAPI: req.query.count ? blogAPI.data.length : blogAPI.data });
+  }).catch(next)
+});
