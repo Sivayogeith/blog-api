@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 import express, { response } from "express";
 
 export const indexRouter = express.Router();
@@ -31,12 +31,27 @@ indexRouter.get("/macondoProject", (req, res, next) => {
     });
 });
 
-indexRouter.get("/githubCommits", (req, res, next) => {
+indexRouter.get("/totalCommits", (req, res, next) => {
   Promise.all([
-    axios.get("https://api.github.com/repos/sivayogeith/blog/commits"),
-    axios.get("https://api.github.com/repos/sivayogeith/blog-api/commits"),
-  ]).then(([blog, blogAPI]) => {
-    return res
-      .status(200).json({blog: req.query.count ? blog.data.length : blog.data, blogAPI: req.query.count ? blogAPI.data.length : blogAPI.data });
-  }).catch(next)
+    axios.get(
+      "https://api.github.com/repos/sivayogeith/blog/commits?sha=main&per_page=1&page=1",
+    ),
+    axios.get(
+      "https://api.github.com/repos/sivayogeith/blog-api/commits?sha=main&per_page=1&page=1",
+    ),
+  ])
+    .then(([blog, blogAPI]) => {
+
+      const getCount = (res: any) => parseInt(new URL(
+        res.headers.get("Link").match(/<([^>]+)>;\s*rel="last"/)?.[1],
+      ).searchParams.get("page")!);
+
+      return res
+        .status(200)
+        .json({
+          blog: getCount(blog),
+          blogAPI: getCount(blogAPI)
+        });
+    })
+    .catch(next);
 });
