@@ -31,7 +31,7 @@ indexRouter.get("/macondoProject", (req, res, next) => {
     });
 });
 
-indexRouter.get("/totalCommits", (req, res, next) => {
+indexRouter.get("/commitsData", (req, res, next) => {
   const headers = {
     Authorization: "Bearer " + process.env.GITHUB_TOKEN,
   };
@@ -54,8 +54,8 @@ indexRouter.get("/totalCommits", (req, res, next) => {
         );
 
       return res.status(200).json({
-        blog: getCount(blog),
-        blogAPI: getCount(blogAPI),
+        blog: { count: getCount(blog), last: blog.data[0].commit },
+        blogAPI: { count: getCount(blogAPI), last: blogAPI.data[0].commit },
       });
     })
     .catch(next);
