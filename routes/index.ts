@@ -54,8 +54,8 @@ indexRouter.get("/commitsData", (req, res, next) => {
         );
 
       return res.status(200).json({
-        blog: { count: getCount(blog), last: blog.data[0].commit },
-        blogAPI: { count: getCount(blogAPI), last: blogAPI.data[0].commit },
+        blog: { count: getCount(blog), last: blog.data[0] },
+        blogAPI: { count: getCount(blogAPI), last: blogAPI.data[0] },
       });
     })
     .catch(next);
