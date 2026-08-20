@@ -4,6 +4,7 @@ import pgp from "pg-promise";
 import type { Comment } from "../types.js";
 import { authenticated } from "../middleware/authMiddleware.js";
 import { limiter } from "../middleware/limiter.js";
+import cookieParser from "cookie-parser";
 
 export const commentsRouter = express.Router();
 const { as } = pgp;
@@ -74,5 +75,14 @@ commentsRouter.post("/:id/reply", authenticated, async (req, res, next) => {
     [req.session.username, message, req.params.id],
   )
     .then(() => res.status(200).send("Successfully replied!"))
+    .catch(next);
+});
+
+commentsRouter.post("/:id/like", authenticated, async (req, res, next) => {
+  db.query(
+    "UPDATE comments SET likes = array_append(likes, $1) WHERE id = $2 AND $1 <> ALL (likes)",
+    [req.session.username, req.params.id],
+  )
+    .then(() => res.status(200).send("Successfully liked the comment!"))
     .catch(next);
 });
