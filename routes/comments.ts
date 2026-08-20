@@ -86,3 +86,12 @@ commentsRouter.post("/:id/like", authenticated, async (req, res, next) => {
     .then(() => res.status(200).send("Successfully liked the comment!"))
     .catch(next);
 });
+
+commentsRouter.post("/:id/dislike", authenticated, async (req, res, next) => {
+  db.query(
+    "UPDATE comments SET dislikes = array_append(dislikes, $1) WHERE id = $2 AND $1 <> ALL (dislikes)",
+    [req.session.username, req.params.id],
+  )
+    .then(() => res.status(200).send("Successfully disliked the comment!"))
+    .catch(next);
+});
