@@ -30,7 +30,7 @@ postsRouter.get("/:slug", async (req, res, next) => {
 
 postsRouter.get("/:slug/comments", async (req, res, next) => {
   db.query<Comment & { image: string }[]>(
-    `SELECT c."from", c.message, c.created_at, c.id, u.image FROM comments c INNER JOIN users u ON c."from" = u.username WHERE c."on" = $1`,
+    `SELECT c."from", c.message, c.created_at, c.id, c.likes, c.dislikes, u.image FROM comments c INNER JOIN users u ON c."from" = u.username WHERE c."on" = $1 ORDER BY c.created_at DESC`,
     req.params.slug,
   )
     .then((comments) => {

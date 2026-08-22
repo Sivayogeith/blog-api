@@ -47,7 +47,7 @@ commentsRouter.delete("/:id/delete", authenticated, async (req, res, next) => {
   );
 
   if (comment.from !== req.session.username) {
-    return res.status(403).send("You aren't allowed to edit this comment!");
+    return res.status(403).send("You aren't allowed to delete this comment!");
   }
 
   db.none("DELETE FROM comments WHERE id = $1", req.params.id)
