@@ -25,6 +25,10 @@ commentsRouter.post("/:id/edit", authenticated, async (req, res, next) => {
     return res.status(403).send("You aren't allowed to edit this comment!");
   }
 
+  if (req.body.message.length < 10) {
+    return res.status(400).send("The minimum comment length is 10 characters!");
+  }
+
   const cs = new (pgp().helpers.ColumnSet)(["message"], { table: "comments" });
   const where = as.format("WHERE id = $1", req.params.id);
   const update = `${pgp().helpers.update(req.body, cs)} ${where}`;

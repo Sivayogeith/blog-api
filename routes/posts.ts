@@ -50,6 +50,10 @@ postsRouter.post("/:slug/comment", authenticated, async (req, res, next) => {
     return res.status(400).send("Please enter all the needed fields!");
   }
 
+  if (message.length < 10) {
+    return res.status(400).send("The minimum comment length is 10 characters!");
+  }
+
   db.query<Comment[]>(
     "INSERT INTO comments (${this:name}) VALUES (${this:csv})",
     { from: req.session.username, on: req.params.slug, message },
