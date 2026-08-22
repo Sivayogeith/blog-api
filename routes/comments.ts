@@ -80,7 +80,7 @@ commentsRouter.post("/:id/reply", authenticated, async (req, res, next) => {
 
 commentsRouter.post("/:id/like", authenticated, async (req, res, next) => {
   db.query(
-    "UPDATE comments SET likes = array_append(likes, $1) WHERE id = $2 AND $1 <> ALL (likes)",
+    "UPDATE comments SET dislikes = array_remove(dislikes, $1), likes = array_append(likes, $1) WHERE id = $2 AND $1 <> ALL (likes)",
     [req.session.username, req.params.id],
   )
     .then(() => res.status(200).send("Successfully liked the comment!"))
@@ -89,9 +89,23 @@ commentsRouter.post("/:id/like", authenticated, async (req, res, next) => {
 
 commentsRouter.post("/:id/dislike", authenticated, async (req, res, next) => {
   db.query(
-    "UPDATE comments SET dislikes = array_append(dislikes, $1) WHERE id = $2 AND $1 <> ALL (dislikes)",
+    "UPDATE comments SET likes = array_remove(likes, $1), dislikes = array_append(dislikes, $1) WHERE id = $2 AND $1 <> ALL (dislikes)",
     [req.session.username, req.params.id],
   )
     .then(() => res.status(200).send("Successfully disliked the comment!"))
+    .catch(next);
+});
+
+commentsRouter.post("/:id/report", authenticated, async (req, res, next) => {
+  db.query("INSERT INTO reports (${this:name}) VALUES (${this:csv})", {
+    type: "comment",
+    on: req.params.id,
+    user: req.session.username,
+  })
+    .then(() =>
+      res
+        .status(200)
+        .send("Successfully reported comment, an Admin will have a look soon!"),
+    )
     .catch(next);
 });
