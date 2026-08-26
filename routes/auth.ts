@@ -27,6 +27,7 @@ authRouter.get("/me", async (req, res, next) => {
         userId: session?.sess.userId,
         isAdmin: session?.sess.isAdmin,
         isOwner: session?.sess.isOwner,
+        slackId: session?.sess.slackId
       });
     })
     .catch(next);
@@ -77,6 +78,8 @@ authRouter.post("/register", async (req, res, next) => {
             req.session.userId = id;
             req.session.isAdmin = false;
             req.session.isOwner = false;
+            req.session.slackId = null;
+
             return res.status(200).send("Successfully registered user :D");
           })
           .catch(next),
@@ -103,6 +106,7 @@ authRouter.post("/login", async (req, res, next) => {
           req.session.userId = user.id;
           req.session.isAdmin = user.isAdmin;
           req.session.isOwner = user.isOwner;
+          req.session.slackId = user.slackId;
 
           return res.status(200).send("Successfully logged in :D");
         } else {
@@ -148,9 +152,10 @@ authRouter.post("/setSlackId", authenticated, (req, res, next) => {
     .post("https://auth.hackclub.com/oauth/token", {
       client_id: process.env.HCA_CLIENT_ID,
       client_secret: process.env.HCA_CLIENT_SECRET,
-      redirect_uri: process.env.PROD == "true"
-        ? "https://blog.sagecat.dev/auth/HCA"
-        : "http://localhost:3000/auth/HCA",
+      redirect_uri:
+        process.env.PROD == "true"
+          ? "https://blog.sagecat.dev/auth/HCA"
+          : "http://localhost:3000/auth/HCA",
       code: code,
       grant_type: "authorization_code",
     })
@@ -165,13 +170,28 @@ authRouter.post("/setSlackId", authenticated, (req, res, next) => {
           headers: { Authorization: "Bearer " + r.data.access_token },
         })
         .then((u) => {
-          const user = u.data
+          const user = u.data;
           if (!user.slack_id) {
-            return res.status(500).send("Something went wrong while getting user info from HC Auth!")
+            return res
+              .status(500)
+              .send(
+                "Something went wrong while getting user info from HC Auth!",
+              );
           }
-          db.query(`UPDATE users SET "slackId" = $1, hca = $2 WHERE id = $3`, [user.slack_id, { token: r.data, data: user }, req.session.userId]).then(() => {
-            res.status(200).send("Successfully connected with HackClub Auth!")
-          }).catch(next)          
-        }).catch(next)
-    }).catch(next)
+          db.query(`UPDATE users SET "slackId" = $1, hca = $2 WHERE id = $3`, [
+            user.slack_id,
+            { token: r.data, data: user },
+            req.session.userId,
+          ])
+            .then(() => {
+              req.session.slackId = user.slack_id
+              res
+                .status(200)
+                .send("Successfully connected with HackClub Auth!");
+            })
+            .catch(next);
+        })
+        .catch(next);
+    })
+    .catch(next);
 });

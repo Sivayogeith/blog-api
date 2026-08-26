@@ -21,6 +21,7 @@ declare module "express-session" {
     userId: number;
     isAdmin: boolean;
     isOwner: boolean;
+    slackId: string | null;
   }
 }
 
@@ -51,6 +52,7 @@ export interface User {
   isOwner: boolean;
   image: string;
   cdnAPIKey?: string;
+  slackId: string;
 }
 
 export interface Session {
