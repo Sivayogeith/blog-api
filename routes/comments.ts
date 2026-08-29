@@ -100,6 +100,23 @@ commentsRouter.post("/:id/dislike", authenticated, async (req, res, next) => {
     .catch(next);
 });
 
+commentsRouter.post(
+  "/:id/removeOpinion",
+  authenticated,
+  async (req, res, next) => {
+    db.query(
+      "UPDATE comments SET likes = array_remove(likes, $1), dislikes = array_remove(dislikes, $1) WHERE id = $2",
+      [req.session.username, req.params.id],
+    )
+      .then(() =>
+        res
+          .status(200)
+          .send("Successfully removed dislike/like from the comment!"),
+      )
+      .catch(next);
+  },
+);
+
 commentsRouter.post("/:id/report", authenticated, async (req, res, next) => {
   db.query("INSERT INTO reports (${this:name}) VALUES (${this:csv})", {
     type: "comment",
