@@ -54,7 +54,7 @@ commentsRouter.delete("/:id/delete", authenticated, async (req, res, next) => {
     return res.status(403).send("You aren't allowed to delete this comment!");
   }
 
-  db.none("DELETE FROM comments WHERE id = $1", req.params.id)
+  db.none("UPDATE comments SET deleted = true WHERE id = $1", req.params.id)
     .then(() => {
       return res.status(200).send("Successfully deleted your comment :D");
     })
@@ -62,7 +62,7 @@ commentsRouter.delete("/:id/delete", authenticated, async (req, res, next) => {
 });
 
 commentsRouter.get("/:id/replies", async (req, res, next) => {
-  db.query("SELECT * FROM comments WHERE parent = $1", req.params.id)
+  db.query("SELECT * FROM comments WHERE parent = $1 AND deleted = false", req.params.id)
     .then((comments) => {
       return res.status(200).json(comments);
     })
