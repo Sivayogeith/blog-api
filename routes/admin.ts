@@ -6,6 +6,7 @@ import { adminOnly, authenticated } from "../middleware/authMiddleware.js";
 import axios from "axios";
 import multer, { memoryStorage } from "multer";
 import { limiter } from "../middleware/limiter.js";
+import session from "express-session";
 
 export const adminRouter = express.Router();
 const { as } = pgp;
@@ -165,3 +166,12 @@ adminRouter.post("/upload", upload.single("file"), async (req, res, next) => {
     })
     .catch(next);
 });
+
+adminRouter.post("/setCdnAPIKey", adminOnly, async (req, res, next) => {
+  if (!req.body.cdnAPIKey) {
+    res.status(400).send("Please enter a HackClub CDN API Key")
+  }
+  db.query(`UPDATE users SET "cdnAPIKey" = $1 WHERE username = $2`, [req.body.cdnAPIKey, req.session.username]).then(() => {
+    res.status(200).send("Successfully set HackClub CDN API Key!")
+  }).catch(next)
+})
