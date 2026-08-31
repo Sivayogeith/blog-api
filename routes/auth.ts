@@ -59,8 +59,8 @@ authRouter.post("/register", async (req, res, next) => {
   if (doesUserExist.length) {
     return res.status(409).send("Username is already in use :(");
   }
-
-  if (image && image !== "") {
+  
+  if (!image || image == "") {
     image = DEFAULT_PFP;
   }
 
