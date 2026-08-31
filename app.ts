@@ -18,6 +18,7 @@ import { adminRouter } from "./routes/admin.js";
 import { commentsRouter } from "./routes/comments.js";
 import { userRouter } from "./routes/user.js";
 import { ownerRouter } from "./routes/owner.js";
+import { AxiosError } from "axios";
 
 const app = express();
 const db = pgPromise()(process.env.POSTGRES_ADDRESS);
@@ -52,7 +53,7 @@ app.use("/owner", ownerRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.log("ERROR: ", err);
-  return res.status(500).send("ERROR:" + err);
+  return res.status(500).send(err instanceof AxiosError ? `ERROR - ${err.status}: ${JSON.stringify(err.response?.data)}` : "ERROR:" + err);
 });
 
 export default app;
