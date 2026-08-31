@@ -66,6 +66,17 @@ This project is a fullstack blog with a bunch of awesome features, this was main
   - `/macondoProject`: Gets the Macondo Project from Macondo API
   - `/commitsData`: Gets latest commits data and total commits count from Github API
 
+### Images
+<img width="1906" height="1013" alt="blog post" src="https://github.com/user-attachments/assets/42628d02-92a6-488e-ba21-99a1b1d536ad" />
+
+<details>
+  <summary>More Images..</summary>
+  <br/>
+  <img width="1906" height="1014" alt="create post" src="https://github.com/user-attachments/assets/ce1a71e3-ebaa-447e-839d-62fc9934c742" />
+  <img width="1907" height="1014" alt="dashboard" src="https://github.com/user-attachments/assets/38456088-c9f1-41cd-9fd4-926c4f4108dc" />
+  <img width="1905" height="1013" alt="profile page" src="https://github.com/user-attachments/assets/d4f00259-7c1e-4d9f-a58b-d7ffcc63ac9f" />
+  <img width="1907" height="1012" alt="main blog page" src="https://github.com/user-attachments/assets/9bbcd54a-806e-44c2-994c-5564e907bc79" />
+</details>
 
 ### Development
 #### Clone the Github repo!
